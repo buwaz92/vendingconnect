@@ -1,0 +1,29 @@
+---
+// Basic privacy policy. Have a read and change anything that doesn't match how you work.
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import settings from '../data/settings.json';
+---
+<Base title="Privacy Policy" description="How Vending Connect Australia collects and uses the details you send us.">
+  <header class="page-head">
+    <div class="wrap">
+      <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'Privacy policy', href: '/privacy/' }]} />
+      <h1>Privacy policy</h1>
+    </div>
+  </header>
+  <section class="section">
+    <div class="wrap narrow prose">
+      <p>This policy explains what we do with the details you give us through this website.</p>
+      <h2>What we collect</h2>
+      <p>When you send an enquiry, we collect what you type into the form: your name, business name, email, phone, suburb, and details about your site.</p>
+      <h2>How we use it</h2>
+      <p>We use your details to reply to your enquiry and, if your site suits, to pass them on to a vending operator who services your area so they can contact you. We don't sell your details.</p>
+      <h2>Form and website services</h2>
+      <p>Our enquiry form is delivered by email through a third-party form service, and the website is hosted by Cloudflare. These services may process your details to deliver the form and the website.</p>
+      <h2>Your choices</h2>
+      <p>You can ask us to see, correct or delete the details we hold about you at any time.</p>
+      <h2>Contact</h2>
+      <p>Questions about privacy? {settings.email ? <>Email <a href={`mailto:${settings.email}`}>{settings.email}</a>.</> : <>Use our <a href="/contact/">contact page</a>.</>}</p>
+    </div>
+  </section>
+</Base>

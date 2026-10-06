@@ -1,0 +1,21 @@
+---
+// "Check your location" call-to-action strip.
+interface Props { title?: string; text?: string; href?: string; button?: string }
+const {
+  title = 'Could your site get a free vending machine?',
+  text = 'Send us your suburb and roughly how many staff or visitors you get. We\'ll let you know if it suits.',
+  href = '/contact/',
+  button = 'Check my location',
+} = Astro.props;
+---
+<section class="section">
+  <div class="wrap">
+    <div class="cta-band">
+      <div>
+        <h2>{title}</h2>
+        <p>{text}</p>
+      </div>
+      <a href={href} class="btn btn-sun">{button}</a>
+    </div>
+  </div>
+</section>

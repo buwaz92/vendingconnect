@@ -1,0 +1,67 @@
+---
+// "Free Machine" page for businesses and property managers.
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const faqs = [
+  { question: 'Is the vending machine really free?', answer: 'For suitable locations, a vending operator supplies, stocks and services the machine, so you don\'t buy it. Every site is checked first, and the final terms come from the operator.' },
+  { question: 'What makes a location suitable?', answer: 'Mostly the number of people using the site each day. Workplaces with plenty of staff, or places with steady visitor traffic, are the best fit. You also need a safe indoor spot and a standard power point.' },
+  { question: 'How does the commission work?', answer: 'Some operators offer high-traffic sites a share of sales. It depends on the operator and how busy the site is, so it isn\'t guaranteed. We\'ll tell you if it\'s on offer for your site.' },
+  { question: 'Who looks after restocking and repairs?', answer: 'The vending operator. They refill the machine, collect the money and fix any problems.' },
+  { question: 'What areas do you cover?', answer: 'We connect locations with operators across Australia. Send us your suburb and we\'ll check who services your area.' },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.question, acceptedAnswer: { '@type': 'Answer', text: f.answer } })),
+};
+---
+<Base title="Get a Free Vending Machine for Your Workplace" description="Find out if your office, warehouse, gym or apartment block qualifies for a free vending machine in Australia. Operators supply, stock and service it. Busy sites may earn commission." schema={faqSchema}>
+  <header class="page-head">
+    <div class="wrap">
+      <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'Free vending machine', href: '/locations/' }]} />
+      <h1>Get a free vending machine for your site</h1>
+      <p>You provide the location. We connect you with a vending operator who supplies, stocks and services the machine. No machine purchase for suitable sites.*</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap grid-3" style="align-items:start">
+      <div style="grid-column: span 2">
+        <h2 style="margin-top:0">How it works</h2>
+        <ol class="steps">
+          <li><h3>Send us your details</h3><p>Your suburb, the type of site, and roughly how many staff or visitors you get each day.</p></li>
+          <li><h3>We check if it suits</h3><p>We look at the location and match you with a vending operator who services your area.</p></li>
+          <li><h3>The operator installs the machine</h3><p>They bring in the machine, stock it and set it up. You just need a spot and a power point.</p></li>
+          <li><h3>Your people enjoy it</h3><p>Cold drinks and snacks on-site. The operator handles refills, money and repairs.</p></li>
+        </ol>
+      </div>
+      <div class="feature" style="background:var(--sun-soft);border-color:#f3d38c">
+        <div class="icon" style="background:#fff">💰</div>
+        <h3>Busy site? You may earn commission</h3>
+        <p>High-traffic locations may be offered a share of sales by the operator. It depends on the site and the operator.*</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="wrap">
+      <h2 style="margin-top:0">Good places for a vending machine</h2>
+      <ul class="chips">
+        {['Offices', 'Warehouses', 'Factories', 'Gyms', 'Schools', 'Medical centres', 'Apartment complexes', 'Hotels', 'Car yards', 'Busy commercial sites'].map((p) => <li><span>{p}</span></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap narrow faq">
+      <h2 style="margin-top:0">Common questions</h2>
+      {faqs.map((f) => <details><summary>{f.question}</summary><p>{f.answer}</p></details>)}
+      <p class="small-print">*Free placement and commission are subject to location suitability and individual vending operator terms.</p>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>

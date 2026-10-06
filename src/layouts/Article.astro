@@ -1,0 +1,104 @@
+---
+// Layout for a single guide or news post.
+// It adds the Google "Article" markup, breadcrumbs, contents list, FAQ and related posts.
+import Base from './Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import PostCard from '../components/PostCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import settings from '../data/settings.json';
+import { formatDate, readingTime, slugify } from '../lib/posts';
+
+interface Props {
+  post: any;
+  base: 'guides' | 'news';
+  headings: { depth: number; slug: string; text: string }[];
+  related: any[];
+}
+const { post, base, headings, related } = Astro.props;
+const d = post.data;
+const site = Astro.site!;
+const url = new URL(`/${base}/${post.id}/`, site).href;
+const toc = headings.filter((h) => h.depth === 2);
+const sectionName = base === 'guides' ? 'Guides' : 'News';
+
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: sectionName, href: `/${base}/` },
+  ...(d.category ? [{ name: d.category, href: `/guides/category/${slugify(d.category)}/` }] : []),
+  { name: d.title, href: `/${base}/${post.id}/` },
+];
+
+const schema: object[] = [{
+  '@context': 'https://schema.org',
+  '@type': base === 'news' ? 'NewsArticle' : 'Article',
+  headline: d.title,
+  description: d.description,
+  image: [new URL(d.cover || '/og-default.png', site).href],
+  datePublished: d.date.toISOString(),
+  dateModified: (d.updated || d.date).toISOString(),
+  author: { '@type': 'Organization', name: settings.siteName, url: site.href },
+  publisher: { '@id': new URL('/#organization', site).href },
+  mainEntityOfPage: url,
+  ...(d.category ? { articleSection: d.category } : {}),
+  inLanguage: 'en-AU',
+}];
+
+if (d.faq?.length) {
+  schema.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: d.faq.map((f: any) => ({ '@type': 'Question', name: f.question, acceptedAnswer: { '@type': 'Answer', text: f.answer } })),
+  });
+}
+---
+<Base title={d.title} description={d.description} image={d.cover} type="article" schema={schema}>
+  <header class="page-head">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1 style="max-width:860px">{d.title}</h1>
+      <p>{d.description}</p>
+      <div class="article-meta">
+        <span>{d.category || 'News'}</span>
+        <span>Published <time datetime={d.date.toISOString()}>{formatDate(d.date)}</time></span>
+        {d.updated && <span>Updated <time datetime={d.updated.toISOString()}>{formatDate(d.updated)}</time></span>}
+        <span>{readingTime(post.body)} min read</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap article-layout">
+    <article class="prose">
+      {d.cover && <img class="article-cover" src={d.cover} alt={d.coverAlt || ''} width="1200" height="675" />}
+      <slot />
+      {d.faq?.length > 0 && (
+        <section class="faq">
+          <h2 id="faq">Frequently asked questions</h2>
+          {d.faq.map((f: any) => <details><summary>{f.question}</summary><p>{f.answer}</p></details>)}
+        </section>
+      )}
+    </article>
+    <aside class="article-aside">
+      {toc.length >= 3 && (
+        <nav class="toc" aria-label="On this page">
+          <h2>On this page</h2>
+          <ol>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+        </nav>
+      )}
+      <div class="aside-cta">
+        <h3>Need a vending machine?</h3>
+        <p>Suitable sites can get one free. Busy sites may earn commission.</p>
+        <a href="/contact/" class="btn btn-sun btn-small">Check my location</a>
+      </div>
+    </aside>
+  </div>
+
+  {related.length > 0 && (
+    <section class="section section-alt">
+      <div class="wrap">
+        <h2 style="margin-top:0">Keep reading</h2>
+        <div class="grid-3">{related.map((p) => <PostCard post={p} base={base} />)}</div>
+      </div>
+    </section>
+  )}
+  <CtaBand />
+</Base>

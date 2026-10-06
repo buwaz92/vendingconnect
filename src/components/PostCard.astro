@@ -1,0 +1,19 @@
+---
+// A card that links to a guide or news post.
+import { formatDate, readingTime } from '../lib/posts';
+interface Props { post: any; base: 'guides' | 'news' }
+const { post, base } = Astro.props;
+const d = post.data;
+const icon = base === 'news' ? '📰' : '📘';
+---
+<a class="card" href={`/${base}/${post.id}/`}>
+  {d.cover
+    ? <img class="card-img" src={d.cover} alt={d.coverAlt || ''} loading="lazy" width="640" height="360" />
+    : <div class="card-img placeholder" aria-hidden="true">{icon}</div>}
+  <div class="card-body">
+    <span class="card-cat">{d.category || 'News'}</span>
+    <h3>{d.title}</h3>
+    <p>{d.description}</p>
+    <span class="card-meta">{formatDate(d.date)} · {readingTime(post.body)} min read</span>
+  </div>
+</a>

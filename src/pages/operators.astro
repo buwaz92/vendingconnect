@@ -1,0 +1,33 @@
+---
+// Page for vending operators who want new locations.
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CtaBand from '../components/CtaBand.astro';
+---
+<Base title="For Vending Operators – Find New Locations" description="Vending operators in Australia: get matched with workplaces and busy sites looking for a vending machine. Plus free guides on growing your vending business.">
+  <header class="page-head">
+    <div class="wrap">
+      <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'For operators', href: '/operators/' }]} />
+      <h1>For vending operators</h1>
+      <p>Finding good locations is the hardest part of vending. We talk to businesses that want a machine and pass suitable sites on to operators in their area.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap grid-3">
+      <div class="feature"><div class="icon">📍</div><h3>Location leads</h3><p>Sites that have already asked for a machine, with suburb and rough staff numbers.</p></div>
+      <div class="feature"><div class="icon">🗺️</div><h3>Matched by area</h3><p>We only send you sites in the areas you service.</p></div>
+      <div class="feature"><div class="icon">📘</div><h3>Free guides</h3><p>Practical tips on machines, repairs, pricing and growing your route.</p></div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="wrap narrow">
+      <h2 style="margin-top:0">Want to receive locations?</h2>
+      <p>Send us an enquiry with the areas you cover, the types of machines you run, and the kinds of sites you're after. Choose "I'm a vending operator" on the form.</p>
+      <a href="/contact/?type=operator" class="btn">Register interest</a>
+    </div>
+  </section>
+
+  <CtaBand title="Read our vending guides" text="Tips on choosing machines, fixing common faults and running a profitable route." href="/guides/" button="Browse guides" />
+</Base>

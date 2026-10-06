@@ -1,0 +1,22 @@
+---
+// List of all news posts.
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getNews } from '../../lib/posts';
+const news = await getNews();
+---
+<Base title="Vending News & Updates" description="News and updates from Vending Connect Australia and the Australian vending industry.">
+  <header class="page-head">
+    <div class="wrap">
+      <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'News', href: '/news/' }]} />
+      <h1>News</h1>
+      <p>Updates from Vending Connect and the vending industry.</p>
+    </div>
+  </header>
+  <section class="section">
+    <div class="wrap">
+      {news.length ? <div class="grid-3">{news.map((post) => <PostCard post={post} base="news" />)}</div> : <p class="muted">No news yet.</p>}
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,14 @@
+---
+// One page per guide, made automatically from the Markdown files.
+import { render } from 'astro:content';
+import Article from '../../layouts/Article.astro';
+import { getGuides, relatedGuides } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const guides = await getGuides();
+  return guides.map((post) => ({ params: { slug: post.id }, props: { post, related: relatedGuides(post, guides) } }));
+}
+const { post, related } = Astro.props;
+const { Content, headings } = await render(post);
+---
+<Article post={post} base="guides" headings={headings} related={related}><Content /></Article>

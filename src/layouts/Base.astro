@@ -1,0 +1,78 @@
+---
+// The frame every page sits in: head tags, header, footer.
+import SEO from '../components/SEO.astro';
+import Logo from '../components/Logo.astro';
+import settings from '../data/settings.json';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string | null;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  schema?: object | object[];
+}
+const props = Astro.props;
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/locations/', label: 'Free Machine' },
+  { href: '/operators/', label: 'For Operators' },
+  { href: '/guides/', label: 'Guides' },
+  { href: '/news/', label: 'News' },
+];
+const year = new Date().getFullYear();
+---
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b4f5c" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <SEO {...props} />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <Logo />
+        <input type="checkbox" id="menu-toggle" class="menu-toggle" aria-label="Open menu" />
+        <label for="menu-toggle" class="menu-btn" aria-hidden="true"><span></span><span></span><span></span></label>
+        <nav class="main-nav" aria-label="Main">
+          {nav.map((n) => <a href={n.href} class={path.startsWith(n.href) ? 'active' : ''}>{n.label}</a>)}
+          <a href="/contact/" class="btn btn-small">Check my location</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main"><slot /></main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-grid">
+        <div>
+          <Logo />
+          <p class="muted">{settings.tagline}</p>
+        </div>
+        <div>
+          <h3>Explore</h3>
+          <a href="/locations/">Get a free vending machine</a>
+          <a href="/operators/">For vending operators</a>
+          <a href="/guides/">Vending guides</a>
+          <a href="/news/">News</a>
+        </div>
+        <div>
+          <h3>Contact</h3>
+          <a href="/contact/">Send an enquiry</a>
+          {settings.email && <a href={`mailto:${settings.email}`}>{settings.email}</a>}
+          {settings.phone && <a href={`tel:${settings.phone.replace(/\s/g, '')}`}>{settings.phone}</a>}
+          {settings.facebookUrl && <a href={settings.facebookUrl} rel="noopener">Facebook</a>}
+        </div>
+      </div>
+      <div class="wrap footer-bottom">
+        <span>© {year} {settings.siteName}</span>
+        <a href="/privacy/">Privacy policy</a>
+      </div>
+    </footer>
+  </body>
+</html>

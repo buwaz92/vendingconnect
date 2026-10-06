@@ -1,0 +1,81 @@
+---
+// Enquiry page. The form sends to your email through Web3Forms (free).
+// Add your Web3Forms access key in the admin page under Site Settings to switch it on.
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import settings from '../data/settings.json';
+
+const formReady = Boolean(settings.web3formsKey);
+const thanksUrl = new URL('/thanks/', Astro.site).href;
+---
+<Base title="Check Your Location – Enquiry" description="Send us your suburb and site details to find out if your workplace qualifies for a free vending machine. Vending operators can register interest too.">
+  <header class="page-head">
+    <div class="wrap">
+      <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'Contact', href: '/contact/' }]} />
+      <h1>Check your location</h1>
+      <p>Tell us a bit about your site and we'll get back to you about whether it suits a free vending machine.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap narrow">
+      {formReady ? (
+        <form class="form" action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value={settings.web3formsKey} />
+          <input type="hidden" name="subject" value="New enquiry from vendingconnect.com.au" />
+          <input type="hidden" name="from_name" value="Vending Connect website" />
+          <input type="hidden" name="redirect" value={thanksUrl} />
+          <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" />
+
+          <label>I am…
+            <select name="enquiry_type" id="enquiry-type" required>
+              <option value="Location – wants a machine">A business or site wanting a machine</option>
+              <option value="Vending operator">A vending operator</option>
+              <option value="Other">Something else</option>
+            </select>
+          </label>
+          <div class="form-row">
+            <label>Your name<input name="name" required autocomplete="name" /></label>
+            <label>Business name<input name="business" autocomplete="organization" /></label>
+          </div>
+          <div class="form-row">
+            <label>Email<input type="email" name="email" required autocomplete="email" /></label>
+            <label>Phone<input type="tel" name="phone" autocomplete="tel" /></label>
+          </div>
+          <div class="form-row">
+            <label>Suburb and state<input name="suburb" required placeholder="e.g. Dandenong VIC" /></label>
+            <label>Staff or visitors per day
+              <select name="people_per_day">
+                <option>Not sure</option>
+                <option>Under 20</option>
+                <option>20–50</option>
+                <option>50–100</option>
+                <option>100–250</option>
+                <option>250+</option>
+              </select>
+            </label>
+          </div>
+          <label>Type of site<input name="site_type" placeholder="e.g. warehouse, office, gym, apartment block" /></label>
+          <label>Anything else?<textarea name="message" rows="4"></textarea></label>
+          <button class="btn" type="submit">Send enquiry</button>
+          <p class="small-print" style="margin:0">We only use your details to reply to your enquiry. See our <a href="/privacy/">privacy policy</a>.</p>
+        </form>
+      ) : (
+        <div class="notice">
+          <p style="margin-top:0"><strong>The enquiry form is being set up.</strong> In the meantime, please get in touch here:</p>
+          <ul style="margin-bottom:0">
+            {settings.facebookUrl && <li><a href={settings.facebookUrl} rel="noopener">Message us on Facebook</a></li>}
+            {settings.email && <li><a href={`mailto:${settings.email}`}>{settings.email}</a></li>}
+            {settings.phone && <li><a href={`tel:${settings.phone.replace(/\s/g, '')}`}>{settings.phone}</a></li>}
+          </ul>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <script>
+    // Pick "vending operator" when coming from the operators page.
+    const select = document.getElementById('enquiry-type') as HTMLSelectElement | null;
+    if (select && new URLSearchParams(location.search).get('type') === 'operator') select.value = 'Vending operator';
+  </script>
+</Base>
