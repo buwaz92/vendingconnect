@@ -3,7 +3,7 @@
 
 backend:
   name: github
-  repo: YOUR-GITHUB-USERNAME/vendingconnect
+  repo: buwaz92/vendingconnect
   branch: main
 
 # Where uploaded images go
